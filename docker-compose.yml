@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:11.3
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: MomentoRoot
+      MARIADB_DATABASE: MomentoDB
+      MARIADB_USER: MomentoUser
+      MARIADB_PASSWORD: Momento
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+
+  # app:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: momento-app
+  #   depends_on:
+  #     - mariadb
+  #   ports:
+  #     - "3310:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/MomentoDB
+  #     SPRING_DATASOURCE_USERNAME: MomentoUser
+  #     SPRING_DATASOURCE_PASSWORD: Momento
+  #   networks:
+  #     - my-network
+  #   command: ["./gradlew", "bootRun"]
+
+networks:
+  my-network:
+
+volumes:
+  mariadb_data:
